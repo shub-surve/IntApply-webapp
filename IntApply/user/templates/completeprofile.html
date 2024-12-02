@@ -1,0 +1,48 @@
+{% extends "userhome.html" %}
+
+{% block title %}Complete Your Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Complete Your Profile</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="contactNo">Contact Number</label>
+            {{ form.contactNo }}  <!-- Render contact number field directly -->
+            {% if form.contactNo.errors %}
+                <div class="error">{{ form.contactNo.errors }}</div>  <!-- Display errors directly -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="country">Country</label>
+            {{ form.country }}  <!-- Render country field directly -->
+            {% if form.country.errors %}
+                <div class="error">{{ form.country.errors }}</div>  <!-- Display errors directly -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="college_name">College Name</label>
+            {{ form.college_name }}  <!-- Render college name field directly -->
+            {% if form.college_name.errors %}
+                <div class="error">{{ form.college_name.errors }}</div>  <!-- Display errors directly -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="highest_education">Highest Education</label>
+            {{ form.highest_education }}  <!-- Render highest education field directly -->
+            {% if form.highest_education.errors %}
+                <div class="error">{{ form.highest_education.errors }}</div>  <!-- Display errors directly -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>  <!-- Styled submit button -->
+        </div>
+    </form>
+</div>
+{% endblock %}
