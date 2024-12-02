@@ -1,0 +1,86 @@
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>IntApply</title>
+    <link rel="stylesheet" href="{% static "css\userhome.css" %}">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">IntApply</div>
+            <div class="nav-links">
+                {% comment %} <a href="{% url 'find_jobs' %}">Find Jobs</a>
+                <a href="{% url 'post_jobs' %}">Post Jobs</a>
+                <a href="{% url 'about' %}">About</a>{% endcomment %}
+                {% if user.is_authenticated %}
+    <a href=""">{{ user.username }}</a>  <!-- Display the user's username -->
+    <a href="">Logout</a>  <!-- Add a logout link -->
+{% else %}
+    <a href="{% url 'user_login' %}">Login</a>
+{% endif %}
+            </div>
+        </nav>
+        {% block  content %}
+        <section class="hero">
+            <h1>Discover Your Next Internship</h1>
+            <p>Connect with top companies and explore meaningful internship opportunities across various industries.</p>
+           
+        </section>
+
+        <section class="recommended-jobs">
+            <div class="container">
+                <h2>Recommended Jobs</h2>
+                <div class="job-grid">
+                    <div class="job-card">
+                        <h3>Software Engineering</h3>
+                        <p>Tech Innovators Inc.</p>
+                        <a href="#" class="btn">Apply Now</a>
+                    </div>
+                    <div class="job-card">
+                        <h3>Marketing Intern</h3>
+                        <p>Creative Solutions LLC</p>
+                        <a href="#" class="btn">Apply Now</a>
+                    </div>
+                    <div class="job-card">
+                        <h3>Data Science</h3>
+                        <p>Analytics Dynamics</p>
+                        <a href="#" class="btn">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    {% endblock %}
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    {% comment %} <li><a href="{% url 'find_jobs' %}">Find Jobs</a></li>
+                    <li><a href="{% url 'post_jobs' %}">Post Jobs</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li> {% endcomment %}
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    {% comment %} <li><a href="{% url 'careers' %}">Careers</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="{% url 'privacy' %}">Privacy Policy</a></li> {% endcomment %}
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    {% comment %} <li><a href="{% url 'help' %}">Help Center</a></li>
+                    <li><a href="{% url 'faq' %}">FAQ</a></li>
+                    <li><a href="{% url 'terms' %}">Terms of Service</a></li> {% endcomment %}
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2024 Intern Portal. All Rights Reserved.
+        </div>
+    </footer>
+</body>
+</html>
