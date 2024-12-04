@@ -1,32 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
 {% load static %}
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IntApply</title>
-    <link rel="stylesheet" href="{% static "css\userhome.css" %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/userhome.css' %}">
 </head>
 <body>
     <div class="container">
+        <!-- Navbar -->
         <nav class="navbar">
             <div class="logo">IntApply</div>
             <div class="nav-links">
-                {% comment %} <a href="{% url 'find_jobs' %}">Find Jobs</a>
-                <a href="{% url 'post_jobs' %}">Post Jobs</a>
-                <a href="{% url 'about' %}">About</a>{% endcomment %}
+                <a href="">Culture</a>
+                <a href="">Internships</a>
+                <a href="">Locations</a>
                 {% if user.is_authenticated %}
-    <a href=""">{{ user.username }}</a>  <!-- Display the user's username -->
-    <a href="">Logout</a>  <!-- Add a logout link -->
-{% else %}
-    <a href="{% url 'user_login' %}">Login</a>
-{% endif %}
+                    <a href="#">{{ user.username }}</a>
+                    <a href="#">Logout</a>
+                {% else %}
+                    <a href="{% url 'user_login' %}">Login</a>
+                {% endif %}
             </div>
         </nav>
-        {% block  content %}
+
+        <!-- Hero Section -->
         <section class="hero">
             <h1>Discover Your Next Internship</h1>
             <p>Connect with top companies and explore meaningful internship opportunities across various industries.</p>
-           
+            <div class="cta-buttons">
+                {% if user.is_authenticated %}
+                    {% if user.is_company %}  <!-- Assuming you have a way to check if the user is a company -->
+                        <a href="{% url 'post_internship' %}" class="btn">Post an Internship</a>
+                    {% else %}
+                        <a href="" class="btn">Find Internships</a>
+                    {% endif %}
+                {% endif %}
+            </div>
         </section>
 
+        <!-- Recommended Jobs -->
         <section class="recommended-jobs">
             <div class="container">
                 <h2>Recommended Jobs</h2>
@@ -50,36 +65,37 @@
             </div>
         </section>
     </div>
-    {% endblock %}
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
-                    {% comment %} <li><a href="{% url 'find_jobs' %}">Find Jobs</a></li>
-                    <li><a href="{% url 'post_jobs' %}">Post Jobs</a></li>
-                    <li><a href="{% url 'about' %}">About Us</a></li> {% endcomment %}
+                    <li><a href="#">Find Jobs</a></li>
+                    <li><a href="#">Post Jobs</a></li>
+                    <li><a href="#">About Us</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Company</h4>
                 <ul>
-                    {% comment %} <li><a href="{% url 'careers' %}">Careers</a></li>
-                    <li><a href="{% url 'contact' %}">Contact</a></li>
-                    <li><a href="{% url 'privacy' %}">Privacy Policy</a></li> {% endcomment %}
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Support</h4>
                 <ul>
-                    {% comment %} <li><a href="{% url 'help' %}">Help Center</a></li>
-                    <li><a href="{% url 'faq' %}">FAQ</a></li>
-                    <li><a href="{% url 'terms' %}">Terms of Service</a></li> {% endcomment %}
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            © 2024 Intern Portal. All Rights Reserved.
+            <p>&copy; 2024 IntApply. All rights reserved.</p>
         </div>
     </footer>
 </body>

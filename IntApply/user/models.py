@@ -20,4 +20,5 @@ class UserProfile(models.Model):
         choices=HIGHEST_EDUCATION_CHOICES,
         default='OT',
     )
+    profilepic = models.ImageField(upload_to='user/profile_pics', blank=True)
     profile_completed = models.BooleanField(default=False)

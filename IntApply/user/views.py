@@ -34,25 +34,24 @@ class LoginUser (View):
             return redirect('complete_profile') 
         else:
             return redirect('user_login')  
-@login_required  
-
 @login_required
 def complete_profile(request):
-    # Get or create the UserProfile object
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    # Redirect if the profile is already completed
+    # If the profile is already completed, redirect to the homepage
     if user_profile.profile_completed:
-        return redirect('homepage')  # Replace 'home' with the appropriate URL name
+        return redirect('homepage')
+
+    # Create a form instance with the user profile
+    form = UserProfileForm(instance=user_profile)
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
-            user_profile.profile_completed = True 
+            user_profile.profile_completed = True  # Mark the profile as completed
             user_profile.save()
-            return redirect('homepage')  
-    else:
-        form = UserProfileForm(instance=user_profile)
+            return redirect('homepage')  # Redirect to homepage after saving
 
+    # Render the form for GET requests
     return render(request, 'completeprofile.html', {'form': form})

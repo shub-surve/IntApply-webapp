@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'user',
     'company',
 ]
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'IntApply.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],  # Ensure this points to your templates directory
+        'DIRS': [BASE_DIR / "templates"],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,12 +81,12 @@ WSGI_APPLICATION = 'IntApply.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Or your preferred database engine
-        'NAME': 'intapply',  # Replace with your database name
-        'USER': 'root',  # Replace with your database username
-        'PASSWORD': 'root',  # Replace with your database password
-        'HOST': 'localhost',  # Or the database host
-        'PORT': '3306',  # Default MySQL port
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'intapply', 
+        'USER': 'root',  
+        'PASSWORD': 'root',  
+        'HOST': 'localhost',  
+        'PORT': '3306',  
     }
 }
 
@@ -128,6 +128,9 @@ USE_TZ = True
 import os
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+
+MEDIA_URL = 'media/'        
+MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

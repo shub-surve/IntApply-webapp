@@ -18,6 +18,7 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
         widgets = {
+            
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your first name'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your last name'}),
@@ -40,8 +41,9 @@ from .models import UserProfile
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['contactNo', 'country', 'college_name', 'highest_education']
+        fields = ['profilepic','contactNo', 'country', 'college_name', 'highest_education']
         widgets = {
+            'profilepic' : forms.FileInput(attrs={'class': 'form-control'}),
             'contactNo': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter your contact number'
