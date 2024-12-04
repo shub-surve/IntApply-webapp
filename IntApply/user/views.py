@@ -55,3 +55,13 @@ def complete_profile(request):
 
     # Render the form for GET requests
     return render(request, 'completeprofile.html', {'form': form})
+
+def logoutuser(request):
+    logout(request)
+    return redirect('user_login')
+
+def userprofile(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'userprofile.html', {'user_profile': user_profile })
+
+    

@@ -26,30 +26,29 @@
 
         <div class="form-group">
             <label for="country">Country</label>
-            {{ form.country }}  <!-- Render country field directly -->
+            {{ form.country }} 
             {% if form.country.errors %}
-                <div class="error">{{ form.country.errors }}</div>  <!-- Display errors directly -->
+                <div class="error">{{ form.country.errors }}</div> 
             {% endif %}
         </div>
 
         <div class="form-group">
-            <label for="college_name">College Name</label>
-            {{ form.college_name }}  <!-- Render college name field directly -->
-            {% if form.college_name.errors %}
-                <div class="error">{{ form.college_name.errors }}</div>  <!-- Display errors directly -->
+            <label for="date_of_birth">DOB</label>
+            {{ form.date_of_birth }} 
+            {% if form.date_of_birth.errors %}
+                <div class="error">{{ form.date_of_birth.errors }}</div>
             {% endif %}
         </div>
-
         <div class="form-group">
-            <label for="highest_education">Highest Education</label>
-            {{ form.highest_education }}  <!-- Render highest education field directly -->
-            {% if form.highest_education.errors %}
-                <div class="error">{{ form.highest_education.errors }}</div>  <!-- Display errors directly -->
+            <label for="gender">Gender</label>
+            {{ form.gender }}  
+            {% if form.gender.errors %}
+                <div class="error">{{ form.gender.errors }}</div>  
             {% endif %}
         </div>
-
+        
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Submit</button>  <!-- Styled submit button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
 </div>

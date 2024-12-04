@@ -6,4 +6,6 @@ urlpatterns = [
     path('register/', views.registeruser, name='user_register'),
     path('login/', views.LoginUser.as_view(), name='user_login'),  # This line points to your custom login view
     path('complete-profile/', views.complete_profile, name='complete_profile'),
+    path('logout/', views.logoutuser, name='user_logout'),
+    
 ]
