@@ -1,67 +1,99 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CreateUserForm, CustomLoginForm, UserProfileForm
-from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .models import UserProfile
+from django.contrib import messages
+from .models import UserProfile , Education
+
 
 def homepage(request):
     return render(request, 'userhome.html')
+
 
 def registeruser(req):
     form = CreateUserForm()
     if req.method == 'POST':
         form = CreateUserForm(req.POST)
         if form.is_valid():
-            form.save()  # Call save() correctly
-            return redirect('user_login')  # Redirect to login page after registration
-    context = {
-        'form': form,
-    }
+            user = form.save()
+            messages.success(req, "Registration successful! Please log in.")
+            return redirect('user_login')
+        else:
+            messages.error(req, "There was an error with your registration. Please try again.")
+    context = {'form': form}
     return render(req, 'userregister.html', context)
 
-class LoginUser (View):
-    def get(self, request):
-        form = CustomLoginForm()  
-        return render(request, 'userlogin.html', {'form': form})
 
-    def post(self, request):
-        username = request.POST.get('username') 
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('complete_profile') 
+
+
+
+def LoginUser(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(data=request.POST)  
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            
+            
+            user = authenticate(request, username=username, password=password)
+            if user:
+               
+                user_profile , created = UserProfile.objects.get_or_create(user=user)
+                
+                
+                login(request, user)
+                
+                
+                if user_profile.profile_completed:
+                    messages.success(request, f"Welcome back, {user.username}!")
+                    return redirect('dashboard' , username = user.username)
+                else:
+                    messages.info(request, "Please complete your profile to proceed.")
+                    return redirect('complete_profile')
+            else:
+                messages.error(request, "Invalid username or password. Please try again.")
         else:
-            return redirect('user_login')  
+            messages.error(request, "Please correct the highlighted errors in the form.")
+    else:
+        form = CustomLoginForm()  # Initialize a blank form for GET requests
+
+    # Render the login form
+    return render(request, 'userlogin.html', {'form': form})
+
+
 @login_required
 def complete_profile(request):
-    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
-
-    # If the profile is already completed, redirect to the homepage
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     if user_profile.profile_completed:
         return redirect('homepage')
+    
 
-    # Create a form instance with the user profile
-    form = UserProfileForm(instance=user_profile)
+    form = UserProfileForm(request.POST or None, instance=user_profile)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        user_profile.profile_completed = True
+        user_profile.save()
+        messages.success(request, "Profile completed successfully!")
+        
+        return redirect('dashboard') 
+    return render(request, 'completeprofile.html', {'form': form , 'profile_complete_percent' : user_profile.calculate_percent()})
 
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user_profile)
-        if form.is_valid():
-            form.save()
-            user_profile.profile_completed = True  # Mark the profile as completed
-            user_profile.save()
-            return redirect('homepage')  # Redirect to homepage after saving
-
-    # Render the form for GET requests
-    return render(request, 'completeprofile.html', {'form': form})
 
 def logoutuser(request):
     logout(request)
+    messages.info(request, "You have been logged out.")
     return redirect('user_login')
 
-def userprofile(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    return render(request, 'userprofile.html', {'user_profile': user_profile })
 
-    
+
+
+@login_required
+def profile_view(request, username):
+    user_profile = get_object_or_404(UserProfile, user__username=username)
+    completion_percentage = user_profile.calculate_percent()
+    context = {
+        'user_profile': user_profile,
+        'completion_percentage': completion_percentage,
+    }
+    return render(request, 'userprofile.html', context)
+

@@ -177,26 +177,205 @@
     </style>
 </head>
 <body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }} - Profile</title>
+    <style>
+        /* Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Variables */
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #f2f2f2;
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+        }
+
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .header-content h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header-content p {
+            color: var(--secondary-color);
+            font-size: 16px;
+        }
+
+        .edit-profile {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-profile:hover {
+            background-color: #0056b3;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: green;
+            border-radius: 5px;
+        }
+
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .section {
+            background-color: #222222;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .info-list {
+            list-style-type: none;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .info-list li span {
+            width: 150px;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .info-list li p {
+            flex-grow: 1;
+        }
+
+        /* Skills */
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-item {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Education */
+        .education-list {
+            list-style-type: none;
+        }
+
+        .education-list li {
+            margin-bottom: 20px;
+        }
+
+        .education-list li h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .education-list li p {
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
     <div class="container">
-        class="container">
         <div class="header">
             <div class="header-left">
-                {% if user.userprofile.profilepic %}
-                <img src="{{ user.userprofile.profilepic.url }}" alt="Profile Picture" class="profile-pic">
+                {% if user_profile.profilepic %}
+                <img src="{{ user_profile.profilepic.url }}" alt="Profile Picture" class="profile-pic">
                 {% else %}
                 <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-pic">
                 {% endif %}
                 <div class="header-content">
-                    <h1>{{ user.username }}</h1>
-                    <p>{{ user.userprofile.bio }}</p>
+                    <h1>{{ user_profile.user.username }}</h1>
+                    <p>{{ user_profile.bio }}</p>
                     <div class="progress-bar">
-                        <div class="progress" style="width: {{ user.userprofile.profile_completed|stringformat:"i" }}%;"></div>
+                        <div class="progress" style="width: {{ completion_percentage|stringformat:"i" }}%;"></div>
                     </div>
-                    <p>Profile Completion: {{ user.userprofile.profile_completed }}%</p>
+                    <p>Profile Completion: {{ completion_percentage|stringformat:"i" }}%</p>
                 </div>
             </div>
-            <a href="{% url 'edit_profile' %}" class="edit-profile">Edit Profile</a>
+            <a href="" class="edit-profile">Edit Profile</a>
         </div>
+        
         
         <div class="main-content">
             <div class="section">
@@ -216,7 +395,7 @@
                     </li>
                     <li>
                         <span>Gender:</span>
-                        <p>{{ user.userprofile.get_gender_display }}</p>
+                        <p>{{ user.userprofile.gender }}</p>
                     </li>
                 </ul>
             </div>
@@ -233,14 +412,18 @@
             <div class="section">
                 <h2 class="section-title">Education</h2>
                 <ul class="education-list">
-                    {% for education in user.educations.all %}
+                    {% for education in educations %}
                     <li>
-                        <h4>{{ education.name }} ({{ education.get_highest_education_display }})</h4>
-                        <p>{{ education.startyear }} - {{ education.endyear }}</p>
+                        <h4>{{ education.degree }} at {{ education.institution_name }}</h4>
+                        <p>{{ education.start_date }} - {{ education.end_date }}</p>
+                        <p>{{ education.field_of_study }}</p>
+                        <p>{{ education.description }}</p>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
+            
+            
 
             <div class="section">
                 <h2 class="section-title">About Me</h2>
@@ -248,5 +431,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>

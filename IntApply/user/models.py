@@ -1,70 +1,51 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
 from django_countries.fields import CountryField
-from  django.utils import timezone
 
-HIGHEST_EDUCATION_CHOICES = [
-        ('X', 'Class X'),
-        ('XII', 'Class XII'),
-        ('AA', 'Associate Degree'),
-        ('BA', 'Bachelor\'s Degree'),
-        ('MA', 'Master\'s Degree'),
-        ('PHD', 'Doctorate'),
-        ('OT', 'Other'),
-    ]
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    contactNo = models.CharField(max_length=15, blank=True)
-    country = CountryField(blank_label="(Select Country)")
-    profilepic = models.ImageField(upload_to='user/profile_pics', blank=True)
+    profilepic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    contactNo = models.CharField(max_length=15, blank=True, null=True)
+    country = models.CharField(max_length=50, blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
+    gender = models.CharField(
+        max_length=1,
+        choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')],
+        blank=True,
+        null=True
+    )
+    bio = models.TextField(blank=True, null=True)
     profile_completed = models.BooleanField(default=False)
-    date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], blank=True)
-    bio = models.TextField(max_length=500, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
+    skills = models.ManyToManyField('UserSkill', blank=True)
+    about_me = models.TextField(blank=True , null=True)
 
     def __str__(self):
-        return f"{self.user.username}'s Profile"
-
-
-class Skill(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class ProfilePageDetails(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    desc = models.TextField(max_length=1000, default="")
-    skills = models.ManyToManyField(Skill, blank=True)
-    profile_completed = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.user.username}'s Profile Details"
+        return self.user.username
+    
+    def calculate_percent(self):
+        fields = [self.profilepic , self.contactNo , self.country , self.date_of_birth , self.gender , self.bio , self.about_me]
+        sum_fields = sum(1 for field in fields if field)
+        total = len(fields)
+        return (sum_fields / total) * 100
 
 
 class Education(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='educations')
-    highest_education = models.CharField(
-        max_length=150,
-        choices=HIGHEST_EDUCATION_CHOICES,
-        default='OT',
-    )
-    name = models.CharField(max_length=50)
-    startyear = models.PositiveIntegerField()
-    endyear = models.PositiveIntegerField()
-
+    user = models.ForeignKey(User, verbose_name=("User"), on_delete=models.CASCADE , blank=True , null=True)
+    institution_name = models.CharField(max_length=255)
+    degree = models.CharField(max_length=100)
+    field_of_study = models.CharField(max_length=100)
+    start_date = models.DateField(blank=True , null= True)
+    end_date = models.DateField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} ({self.startyear} - {self.endyear})"
+        return f"{self.degree} at {self.institution_name}"
 
 
 class UserSkill(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    proficiency_level = models.CharField(max_length=50, choices=[('Beginner', 'Beginner'), ('Intermediate', 'Intermediate'), ('Expert', 'Expert')])
+    skill = models.CharField(max_length=100)
+    proficiency_level = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.user.username} - {self.skill.name} ({self.proficiency_level})"
+        return self.skill
