@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IntApply</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>IntApply - Find Your Dream Internship</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/userhome.css' %}">
 </head>
 <body>
@@ -14,12 +14,23 @@
         <nav class="navbar">
             <div class="logo">IntApply</div>
             <div class="nav-links">
-                <a href="">Culture</a>
-                <a href="">Internships</a>
-                <a href="">Locations</a>
+                <a href="#">Culture</a>
+                <a href="#">Internships</a>
+                <a href="#">Locations</a>
+        
                 {% if user.is_authenticated %}
-                    <a href="{% url "dashboard" user.username %}">{{ user.username }}</a>
-                    <a href="{% url "user_logout" %}">Logout</a>
+                    <div class="dropdown">
+                        <button class="dropdown-button">
+                            {{ user.username }} 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'dashboard' user.username %}">Profile</a>
+                            <a href="{% url 'user_logout' %}">Logout</a>
+                        </div>
+                    </div>
                 {% else %}
                     <a href="{% url 'user_login' %}">Login</a>
                 {% endif %}
@@ -28,23 +39,27 @@
 
         <!-- Hero Section -->
         <section class="hero">
-            <h1>Discover Your Next Internship</h1>
-            <p>Connect with top companies and explore meaningful internship opportunities across various industries.</p>
-            <div class="cta-buttons">
-                {% if user.is_authenticated %}
-                    {% if user.is_company %}  <!-- Assuming you have a way to check if the user is a company -->
-                        <a href="{% url 'post_internship' %}" class="btn">Post an Internship</a>
+            <div class="hero-content">
+                <h1>Discover Your Next Internship</h1>
+                <p>Connect with top companies and explore meaningful internship opportunities across various industries. Your career journey starts here.</p>
+                <div class="cta-buttons">
+                    {% if user.is_authenticated %}
+                        {% if user.is_company %}
+                            <a href="{% url 'post_internship' %}" class="btn">Post an Internship</a>
+                        {% else %}
+                            <a href="#" class="btn">Find Internships</a>
+                        {% endif %}
                     {% else %}
-                        <a href="" class="btn">Find Internships</a>
+                        <a href="{% url 'user_login' %}" class="btn">Get Started</a>
                     {% endif %}
-                {% endif %}
+                </div>
             </div>
         </section>
 
         <!-- Recommended Jobs -->
         <section class="recommended-jobs">
             <div class="container">
-                <h2>Recommended Jobs</h2>
+                <h2>Recommended Internships</h2>
                 <div class="job-grid">
                     <div class="job-card">
                         <h3>Software Engineering</h3>

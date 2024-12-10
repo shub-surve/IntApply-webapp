@@ -86,14 +86,18 @@ def logoutuser(request):
 
 
 
-
 @login_required
 def profile_view(request, username):
     user_profile = get_object_or_404(UserProfile, user__username=username)
+    educations = Education.objects.filter(user__username=username)
+    skills = user_profile.skills.all()
     completion_percentage = user_profile.calculate_percent()
     context = {
         'user_profile': user_profile,
+        'educations': educations,
+        'skills': skills,
         'completion_percentage': completion_percentage,
     }
+    # print(educations)
     return render(request, 'userprofile.html', context)
 
